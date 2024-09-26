@@ -1,12 +1,16 @@
 using System.Net.Http;
 using System.Text.Json;
 using FastemsBerget.Models;
+using RamBase.Api.Sdk;
+using RamBase.Api.Sdk.Authentication;
+using RamBase.Api.Sdk.Request;
+using RamBaseApiSdk.Authentication;
 
 namespace FastemsBerget.Services
 {
     public interface IWorkOrderService
     {
-        Task<int> HandleWorkOrderStartedAsync(WorkOrderWebhook webhookData);
+        Task<int> HandleWorkOrderStartedAsync(WorkOrderWebhook webhookData, string accessToken);
     }
 
     public class WorkOrderService : IWorkOrderService
@@ -18,8 +22,10 @@ namespace FastemsBerget.Services
             _httpClient = httpClient;
         }
 
-        public async Task<int> HandleWorkOrderStartedAsync(WorkOrderWebhook webhookData)
+        public async Task<int> HandleWorkOrderStartedAsync(WorkOrderWebhook webhookData, string accessToken)
         {
+
+
             System.Console.WriteLine("Service lag data: " + webhookData.ProductionWorkOrderId);
             // Perform a follow-up API call to get precise data
             var apiUrl = $"https://rambaseapi.com/api/workorders/";
