@@ -1,0 +1,6 @@
+@FastemsBerget_HostAddress = http://localhost:5143
+
+GET {{FastemsBerget_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
