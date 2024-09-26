@@ -5,7 +5,7 @@ using FastemsBerget.Services;
 namespace FastemsBerget.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WorkOrderController : ControllerBase
     {
         private readonly IWorkOrderService _workOrderService;
@@ -30,7 +30,7 @@ namespace FastemsBerget.Controllers
                 var result = await _workOrderService.HandleWorkOrderStartedAsync(webhookData);
 
                 // Return appropriate response
-                return Ok(result);
+                return Ok("Hei hei alle sammen: " +result);
             }
             catch (Exception ex)
             {

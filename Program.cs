@@ -1,4 +1,5 @@
 using FastemsBerget.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace FastemsBerget
 {
@@ -30,6 +31,13 @@ namespace FastemsBerget
                 app.UseSwaggerUI();
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions // This line is critical for forwarding HTTP headers from ngrok or any reverse proxy.
+            {
+
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+
+            });
+
             app.UseHttpsRedirection();
 
             app.MapControllers(); // Map the controllers
@@ -38,3 +46,5 @@ namespace FastemsBerget
         }
     }
 }
+
+ 
