@@ -6,7 +6,7 @@ namespace FastemsBerget.Services
 {
     public interface IWorkOrderService
     {
-        Task<ProcessedWorkOrder> HandleWorkOrderStartedAsync(WorkOrderWebhook webhookData);
+        Task<int> HandleWorkOrderStartedAsync(WorkOrderWebhook webhookData);
     }
 
     public class WorkOrderService : IWorkOrderService
@@ -18,13 +18,14 @@ namespace FastemsBerget.Services
             _httpClient = httpClient;
         }
 
-        public async Task<ProcessedWorkOrder> HandleWorkOrderStartedAsync(WorkOrderWebhook webhookData)
+        public async Task<int> HandleWorkOrderStartedAsync(WorkOrderWebhook webhookData)
         {
+            System.Console.WriteLine("Service lag data: " + webhookData.ProductionWorkOrderId);
             // Perform a follow-up API call to get precise data
-            var apiUrl = $"https://rambaseapi.com/api/workorders/{webhookData.WorkOrderId}";
+            var apiUrl = $"https://rambaseapi.com/api/workorders/";
             var response = await _httpClient.GetAsync(apiUrl);
 
-            if (!response.IsSuccessStatusCode)
+/*             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Failed to retrieve work order data");
             }
@@ -33,7 +34,7 @@ namespace FastemsBerget.Services
             var workOrderDetails = JsonSerializer.Deserialize<WorkOrderDetails>(jsonData);
 
             // Process the data and send it to another web service
-            var processedWorkOrder = new ProcessedWorkOrder
+            var processedWorkOrder = new ProcessWorkOrder
             {
                 WorkOrderId = webhookData.WorkOrderId,
                 DetailedInfo = workOrderDetails.DetailedInfo,
@@ -48,9 +49,9 @@ namespace FastemsBerget.Services
             if (!sendResponse.IsSuccessStatusCode)
             {
                 throw new Exception("Failed to send work order data to target service");
-            }
+            } */
 
-            return processedWorkOrder;
+            return 0;
         }
     }
 }

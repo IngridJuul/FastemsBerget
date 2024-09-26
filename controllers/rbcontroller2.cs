@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-using FastemsBerget.Models;
-using FastemsBerget.Services;
+/* using Microsoft.AspNetCore.Mvc;
+
 
 namespace FastemsBerget.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[rbController]")]
     public class WorkOrderController : ControllerBase
     {
         private readonly IWorkOrderService _workOrderService;
@@ -15,11 +14,11 @@ namespace FastemsBerget.Controllers
             _workOrderService = workOrderService;
         }
 
+        // Update the method to accept the new model with two parameters
         [HttpPost("WorkOrderStarted")]
         public async Task<IActionResult> WorkOrderStarted([FromBody] WorkOrderWebhook webhookData)
         {
-            System.Console.WriteLine("work order id: " + webhookData.ProductionWorkOrderId);
-            if (webhookData == null)
+            if (webhookData == null || string.IsNullOrEmpty(webhookData.ProductionWorkOrderId))
             {
                 return BadRequest("Invalid data received from webhook.");
             }
@@ -40,3 +39,4 @@ namespace FastemsBerget.Controllers
         }
     }
 }
+ */

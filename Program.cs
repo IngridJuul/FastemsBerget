@@ -18,6 +18,9 @@ namespace FastemsBerget
             // Register the WorkOrderService
             builder.Services.AddScoped<IWorkOrderService, WorkOrderService>();
 
+            // Add MVC Controllers
+            builder.Services.AddControllers(); // This line is necessary for controllers
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
