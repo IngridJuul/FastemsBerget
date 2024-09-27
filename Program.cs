@@ -1,12 +1,18 @@
 using FastemsBerget.Services;
 using Microsoft.AspNetCore.HttpOverrides;
+using dotenv.net;
 
 namespace FastemsBerget
 {
+    
     public class Program
     {
         public static void Main(string[] args)
         {
+
+            // Load environment variables from the .env file
+            DotEnv.Load();
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.

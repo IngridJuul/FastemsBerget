@@ -50,34 +50,6 @@ namespace FastemsBerget.Services
                 // Handle errors, possibly throw an exception or return null
                 throw new Exception($"Failed to fetch production work order data. Status code: {response.StatusCode}");
             }
-            
-
-
-/*             if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Failed to retrieve work order data");
-            }
-
-            var jsonData = await response.Content.ReadAsStringAsync();
-            var workOrderDetails = JsonSerializer.Deserialize<WorkOrderDetails>(jsonData);
-
-            // Process the data and send it to another web service
-            var processedWorkOrder = new ProcessWorkOrder
-            {
-                WorkOrderId = webhookData.WorkOrderId,
-                DetailedInfo = workOrderDetails.DetailedInfo,
-                Timestamp = DateTime.UtcNow
-            };
-
-            // Now send it to the target web service
-            var targetUrl = "https://anotherwebservice.com/api/endpoint";
-            var content = new StringContent(JsonSerializer.Serialize(processedWorkOrder));
-
-            var sendResponse = await _httpClient.PostAsync(targetUrl, content);
-            if (!sendResponse.IsSuccessStatusCode)
-            {
-                throw new Exception("Failed to send work order data to target service");
-            } */
 
             return 0;
         }

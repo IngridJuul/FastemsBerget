@@ -23,9 +23,9 @@ namespace FastemsBerget.Controllers
         public async Task<IActionResult> WorkOrderStarted([FromBody] WorkOrderWebhook webhookData)
         {
             string target = "BERGET_TEST";
-            string clientId = "MRrvDw7520eEpU5eT4Yi0Q2";
-            string secret = "fW9pDegD9UOiDYy84IfoZA2";
-            RamBaseApi rbAPI = new RamBaseApi(clientId, secret);
+            var clientId = Environment.GetEnvironmentVariable("RAMBASE_CLIENT_ID");
+            var clientSecret = Environment.GetEnvironmentVariable("RAMBASE_CLIENT_SECRET");
+            RamBaseApi rbAPI = new RamBaseApi(clientId, clientSecret);
             try{
                 rbAPI.LoginWithClientCredentialsAsync("","",target).GetAwaiter().GetResult();
             }
@@ -43,6 +43,8 @@ namespace FastemsBerget.Controllers
             }
             System.Console.WriteLine(rbAPI.AccessToken);
             System.Console.WriteLine("work order id: " + webhookData.ProductionWorkOrderId);
+
+
             if (webhookData == null)
             {
                 return BadRequest("Invalid data received from webhook.");
@@ -61,6 +63,8 @@ namespace FastemsBerget.Controllers
                 // Log or handle the error as needed
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+
+            
         }
     }
 }
