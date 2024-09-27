@@ -19,12 +19,21 @@ namespace FastemsBerget.Controllers
             _workOrderService = workOrderService;
         }
 
+        // This Endpoint will trigger when the release production workorder event is triggerd in rambase.
         [HttpPost("WorkOrderStarted")]
         public async Task<IActionResult> WorkOrderStarted([FromBody] WorkOrderWebhook webhookData)
         {
+            // the post call needs to send in a Json object that matches WorkOrderWebhook, if not we return BadRequest.
+            if (webhookData == null)
+            {
+                return BadRequest("Invalid data received from webhook.");
+            }
+
+            // Authenticate login to Rambase to get a valid access token.
             string target = "BERGET_TEST";
             var clientId = Environment.GetEnvironmentVariable("RAMBASE_CLIENT_ID");
             var clientSecret = Environment.GetEnvironmentVariable("RAMBASE_CLIENT_SECRET");
+
             RamBaseApi rbAPI = new RamBaseApi(clientId, clientSecret);
             try{
                 rbAPI.LoginWithClientCredentialsAsync("","",target).GetAwaiter().GetResult();
@@ -41,19 +50,11 @@ namespace FastemsBerget.Controllers
             {
                 throw new Exception(ex.Message, ex.InnerException);
             }
-            System.Console.WriteLine(rbAPI.AccessToken);
-            System.Console.WriteLine("work order id: " + webhookData.ProductionWorkOrderId);
 
-
-            if (webhookData == null)
-            {
-                return BadRequest("Invalid data received from webhook.");
-            }
-
+            // With accesstoken recived we make a get call to rambase to retrive the whole productionworkorder object. 
             try
             {
-                // Process the webhook data asynchronously
-                var result = await _workOrderService.HandleWorkOrderStartedAsync(webhookData, rbAPI.AccessToken);
+                WorkOrder result = await _workOrderService.getRbProductionWorkOrder(webhookData, rbAPI.AccessToken);
 
                 // Return appropriate response
                 return Ok("Hei hei alle sammen: " +result);
