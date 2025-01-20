@@ -22,6 +22,64 @@ namespace FastemsBerget.Services
             _httpClient = httpClient;
         }
 
+       struct RBiWorkOrder
+// Input til programmet fra RB, data hentet i første GET WO
+{
+    public int RBiWorkOrderId ;
+    public int RBiStatus ;
+    public string? RBiType;
+    public DateTime RBiCreatedAt;
+    public DateTime RBiUpdatedAt;
+    public DateTime RBiRegistrationDate;
+    public string? RBiCustomersReferenceNumber;
+    public double RBiNetWeight;
+    public DateTime RBiRequestedCompletionDate;
+    public DateTime? RBiConfirmedCompletionDate;
+    public bool RBiIsConfirmedCompletionDateLocked;
+    public string? RBiProductRevision;
+    public double RBiQuantity;
+    public DateTime? RBiScheduledStartDate;
+    public DateTime? RBiScheduledCompletionDate;
+    public string? RBiDueDateAndTime;
+    public DateTime?RBiEstimatedStartDate;
+    public double RBiRemainingQuantity;
+    public double RBiPotentialProductionQuantity;
+    public bool RBiHasMaterialShortage;
+    public int? RBiMaterialDelayedDays;
+    public bool RBiIsBlockedForPurchase;
+    public bool RBiHasPriority;
+    public bool RBiIsRework;
+    public string? RBiCustomersReference;
+    public DateTime RBiLatestStartAt;
+    public double RBiAvailableQuantity;
+    public double RBiAvailableQuantityInPercent;
+    public bool RBiHasProcessRunning;
+    public bool RBiIsInFaultyState;
+    public bool RBiNeedsMaterialReplacementToRelease;
+    public bool RBiIsManufacturedInBatches;
+    public bool RBiIsBlockedForProduction;
+    public string? RBiNote;
+    public bool RBiHasStandardStructure;
+    public string? RBiManufacturedProductName;
+    public string? RBiPlanningCategory;
+    public string? RBiProductUnitMarkingSpecification;
+    public OnHold? RBiOnHold;
+    public ProductionFor? RBiProductionFor;
+    public Location? RBiLocation;
+    public MeasurementUnit? RBiMeasurementUnit;
+    public Product? RBiProduct;
+    public Price? RBiPrice;
+    public ProductStructure? RBiProductStructure;
+    public FinanceProject? RBiFinanceProject;
+    public Department? RBiDepartment;
+    public ProductionPlanner? RBiProductionPlanner;
+    public InitialWorkOrder? RBiInitialWorkOrder;
+    public ForwardedFrom? RBiForwardedFrom;
+    public Scrap? RBiScrap;
+    public ManufacturingArea? RBiManufacturingArea;
+    public Management? RBiManagement;
+}
+
         // Makes a call to rambase and gets the prodcution work order object from the given productionworkorderID.
         // Takes two parameters: productionworkorderID and accessToken  
         public async Task<WorkOrder> getRbProductionWorkOrder(WorkOrderWebhook webhookData, string accessToken)
@@ -42,7 +100,29 @@ namespace FastemsBerget.Services
                 });
                 
                 if(workOrder != null){
+                    RBiWorkOrder RBiWOinp = new RBiWorkOrder();
+                    Boolean FMopprett = true;
                     System.Console.WriteLine(workOrder?.ProductionWorkOrder?.Quantity);
+                    System.Console.WriteLine(workOrder?.ProductionWorkOrder?.ScheduledStartDate);
+                    // Henter ut de dataene som trengs fra WO RB til Fastems
+                    RBiWOinp.RBiWorkOrderId = workOrder.ProductionWorkOrder.ProductionWorkOrderId;
+                    RBiWOinp.RBiStatus = workOrder.ProductionWorkOrder.Status;
+                    RBiWOinp.RBiScheduledCompletionDate = workOrder.ProductionWorkOrder.ScheduledCompletionDate;
+                    RBiWOinp.RBiQuantity = workOrder.ProductionWorkOrder.Quantity;
+                    // Sjekke datoformat til Fastems, legge til tid
+                    // Står ikke i dokumentasjonen at dat må være eter dagens dato? 
+                    string RBiTime = "T23:59:59"; 
+                    RBiWOinp.RBiDueDateAndTime = RBiWOinp.RBiScheduledCompletionDate + RBiTime;
+                    // Sjekke kvantum
+                    if (RBiWOinp.RBiQuantity == 0.00) {
+                        FMopprett = false;
+                    }
+                    if(FMopprett) {
+                        // Koble opp mot Fastems? Eller skal det gjøres først?
+                        // Flytte felter til Fastems Struktur?
+                        // Kalle Fastems API
+
+                    }
                     return workOrder;
                 }
                 else{
